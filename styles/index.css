@@ -1,0 +1,7 @@
+.links{
+    display: flex;
+    flex-direction: column;
+}
+.links > *:not(:last-child){
+    margin-bottom: 16px;
+}
