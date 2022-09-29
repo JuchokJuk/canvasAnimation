@@ -5,7 +5,6 @@ const width = draw.canvasWidth;
 const height = draw.canvasHeight;
 
 function animate(tick) {
-  console.log(tick);
   for (let y = 0; y < draw.canvasHeight; y++) {
     for (let x = 0; x < draw.canvasWidth; x++) {
       const d = distanceToCenter(x, y, width, height);
