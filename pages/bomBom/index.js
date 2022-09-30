@@ -1,5 +1,6 @@
 const canvas = document.getElementById("canvas");
 const draw = new Draw(canvas);
+const sound = new Sound();
 
 const width = draw.canvasWidth;
 const height = draw.canvasHeight;
@@ -47,23 +48,52 @@ function animate(tick) {
       const b = Math.max(br, by, ba, bb);
 
       draw.drawPixel(x, y, r, g, b, 255);
+
     }
   }
   draw.updateCanvas();
+
+
+  if (draw.canvasData.data[20] > 240) {
+
+    sound.play(
+      scale(draw.canvasData.data[0], 0, 255, 0, 8000),
+      scale(draw.canvasData.data[10], 0, 255, 0, 10),
+      'sine'
+    );
+  }
+
+  if (draw.canvasData.data[30] > 240) {
+
+    sound.play(
+      scale(draw.canvasData.data[0], 0, 255, 0, 1000),
+      scale(draw.canvasData.data[10], 0, 255, 0, 10),
+      'square'
+    );
+  }
+
+  if (draw.canvasData.data[30] > 240) {
+
+    sound.play(
+      scale(draw.canvasData.data[0], 0, 255, 0, 1000),
+      scale(draw.canvasData.data[10], 0, 255, 0, 1),
+      'sine'
+    );
+  }
 }
 
 function form(width, height, x, y, tick, xOffset, yOffset) {
-  x = height+x*tick*0.01;
-  y = width+y*tick*0.01;
+  x = height + x * tick * 0.01;
+  y = width + y * tick * 0.01;
   const value = Math.sin(
     (tick +
       Math.sqrt(
         Math.pow(width / 2 - x - xOffset, 2) &
-          Math.pow(height / 2 - y - yOffset, 2)
+        Math.pow(height / 2 - y - yOffset, 2)
       )) *
-      (5 +
-        5 *
-          (Math.sin(tick * 0.05) + Math.sin(tick * 0.15)))
+    (5 +
+      5 *
+      (Math.sin(tick * 0.05) + Math.sin(tick * 0.15)))
   );
 
   const scaledValue = scale(value, -1, 1, 0, 255);
