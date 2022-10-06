@@ -32,5 +32,15 @@ class Draw {
   updateCanvas() {
     this.ctx.putImageData(this.canvasData, 0, 0);
   }
-  
+
+  getCanvasDataPixel(x, y) {
+    const index = (x + y * this.canvasWidth) * 4;
+    return {
+      r: this.canvasData.data[index + 0],
+      g: this.canvasData.data[index + 1],
+      b: this.canvasData.data[index + 2],
+      a: this.canvasData.data[index + 3]
+    }
+  }
+
 }

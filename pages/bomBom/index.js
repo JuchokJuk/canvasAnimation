@@ -1,6 +1,5 @@
 const canvas = document.getElementById("canvas");
 const draw = new Draw(canvas);
-const sound = new Sound();
 
 const width = draw.canvasWidth;
 const height = draw.canvasHeight;
@@ -8,77 +7,53 @@ const height = draw.canvasHeight;
 function animate(tick) {
   for (let y = 0; y < draw.canvasHeight; y++) {
     for (let x = 0; x < draw.canvasWidth; x++) {
-      const d = distanceToCenter(x, y, width, height) * 0.01;
-
-      // red
-      const rOffsetX = Math.sin(4 * d + tick * 0.1 + x * 0.1);
-      const rOffsetY = Math.cos(4 * d + tick * 0.1 + y * 0.1);
-
-      const rr = form(width, height, x, y, tick, rOffsetX, rOffsetY);
-      const br = 0;
-      const gr = 0;
-
-      // yellow
-      const yOffsetX = Math.sin(4 * d + tick * 0.1 + 0.1 + x * 0.1);
-      const yOffsetY = Math.cos(4 * d + tick * 0.1 + 0.1 + y * 0.1);
-
-      const ry = form(width, height, x, y, tick, yOffsetX, yOffsetY);
-      const by = 0;
-      const gy = form(width, height, x, y, tick, yOffsetX, yOffsetY);
-
-      // aqua
-      const aOffsetX = Math.sin(4 * d + tick * 0.1 + 0.2 + x * 0.1);
-      const aOffsetY = Math.cos(4 * d + tick * 0.1 + 0.2 + y * 0.1);
-
-      const ra = 0;
-      const ba = form(width, height, x, y, tick, aOffsetX, aOffsetY);
-      const ga = form(width, height, x, y, tick, aOffsetX, aOffsetY);
-
-      //blue
-      const bOffsetX = Math.sin(4 * d + tick * 0.1 + 0.3 + x * 0.1);
-      const bOffsetY = Math.cos(4 * d + tick * 0.1 + 0.3 + y * 0.1);
-
-      const rb = 0;
-      const bb = form(width, height, x, y, tick, bOffsetX, bOffsetY);
-      const gb = 0;
-
-      // use lighten mix blend mode
-      const r = Math.max(rr, ry, ra, rb);
-      const g = Math.max(gr, gy, ga, gb);
-      const b = Math.max(br, by, ba, bb);
-
+      const { r, g, b } = fullForm(x, y, tick)
       draw.drawPixel(x, y, r, g, b, 255);
-
     }
   }
   draw.updateCanvas();
+}
 
+function fullForm(x, y, tick) {
+  const d = distanceToCenter(x, y, width, height) * 0.01;
 
-  if (draw.canvasData.data[20] > 240) {
+  // red
+  const rOffsetX = Math.sin(4 * d + tick * 0.1 + x * 0.1);
+  const rOffsetY = Math.cos(4 * d + tick * 0.1 + y * 0.1);
 
-    sound.play(
-      scale(draw.canvasData.data[0], 0, 255, 0, 8000),
-      scale(draw.canvasData.data[10], 0, 255, 0, 10),
-      'sine'
-    );
-  }
+  const rr = form(width, height, x, y, tick, rOffsetX, rOffsetY);
+  const br = 0;
+  const gr = 0;
 
-  if (draw.canvasData.data[30] > 240) {
+  // yellow
+  const yOffsetX = Math.sin(4 * d + tick * 0.1 + 0.1 + x * 0.1);
+  const yOffsetY = Math.cos(4 * d + tick * 0.1 + 0.1 + y * 0.1);
 
-    sound.play(
-      scale(draw.canvasData.data[0], 0, 255, 0, 1000),
-      scale(draw.canvasData.data[10], 0, 255, 0, 10),
-      'square'
-    );
-  }
+  const ry = form(width, height, x, y, tick, yOffsetX, yOffsetY);
+  const by = 0;
+  const gy = form(width, height, x, y, tick, yOffsetX, yOffsetY);
 
-  if (draw.canvasData.data[30] > 240) {
+  // aqua
+  const aOffsetX = Math.sin(4 * d + tick * 0.1 + 0.2 + x * 0.1);
+  const aOffsetY = Math.cos(4 * d + tick * 0.1 + 0.2 + y * 0.1);
 
-    sound.play(
-      scale(draw.canvasData.data[0], 0, 255, 0, 1000),
-      scale(draw.canvasData.data[10], 0, 255, 0, 1),
-      'sine'
-    );
+  const ra = 0;
+  const ba = form(width, height, x, y, tick, aOffsetX, aOffsetY);
+  const ga = form(width, height, x, y, tick, aOffsetX, aOffsetY);
+
+  //blue
+  const bOffsetX = Math.sin(4 * d + tick * 0.1 + 0.3 + x * 0.1);
+  const bOffsetY = Math.cos(4 * d + tick * 0.1 + 0.3 + y * 0.1);
+
+  const rb = 0;
+  const bb = form(width, height, x, y, tick, bOffsetX, bOffsetY);
+  const gb = 0;
+
+  // use lighten mix blend mode
+  return {
+    r: Math.max(rr, ry, ra, rb),
+    g: Math.max(gr, gy, ga, gb),
+    b: Math.max(br, by, ba, bb)
   }
 }
 
@@ -109,13 +84,18 @@ function distanceToCenter(x, y, width, height) {
   return Math.sqrt(Math.pow(width / 2 - x, 2) + Math.pow(height / 2 - y, 2));
 }
 
-let time = 0;
 
-const loop = () => {
-  time += 0.01;
-  const loopedTime = 20 * Math.sin(time / 4);
-  animate(loopedTime);
+
+function video() {
+  let time = 0;
+
+  const loop = () => {
+    time += 0.01;
+    const loopedTime = 20 * Math.sin(time / 4);
+    animate(loopedTime);
+    requestAnimationFrame(loop);
+  };
+
   requestAnimationFrame(loop);
-};
-
-requestAnimationFrame(loop);
+}
+video();

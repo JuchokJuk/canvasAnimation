@@ -97,8 +97,8 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
       Math.sqrt(
         (512 * tick * Math.pow(x + xOffset, 2)) ^ Math.pow(y + yOffset, 2)
       )) *
-      0.05 *
-      1.25
+    0.05 *
+    1.25
   );
 
   const scaledValue = scale(value, -1, 1, 0, 255);
