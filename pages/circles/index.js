@@ -7,7 +7,7 @@ const height = draw.canvasHeight;
 function animate(tick) {
   for (let y = 0; y < draw.canvasHeight; y++) {
     for (let x = 0; x < draw.canvasWidth; x++) {
-      const d = distanceToCenter(x, y, width, height);
+      const d = offset(x, y, width, height);
 
       // red
       const rr = form(
@@ -29,8 +29,8 @@ function animate(tick) {
         x,
         y,
         tick,
-        d * Math.sin(tick * 0.02 + 0.01*2),
-        d * Math.cos(tick * 0.02 + 0.01*2)
+        d * Math.sin(tick * 0.02 + 0.01 * 2),
+        d * Math.cos(tick * 0.02 + 0.01 * 2)
       );
       const by = 0;
       const gy = form(
@@ -39,8 +39,8 @@ function animate(tick) {
         x,
         y,
         tick,
-        d * Math.sin(tick * 0.02 + 0.01*2),
-        d * Math.cos(tick * 0.02 + 0.01*2)
+        d * Math.sin(tick * 0.02 + 0.01 * 2),
+        d * Math.cos(tick * 0.02 + 0.01 * 2)
       );
 
       // aqua
@@ -51,8 +51,8 @@ function animate(tick) {
         x,
         y,
         tick,
-        d * Math.sin(tick * 0.02 + 0.02*2),
-        d * Math.cos(tick * 0.02 + 0.02*2)
+        d * Math.sin(tick * 0.02 + 0.02 * 2),
+        d * Math.cos(tick * 0.02 + 0.02 * 2)
       );
       const ga = form(
         width,
@@ -60,8 +60,8 @@ function animate(tick) {
         x,
         y,
         tick,
-        d * Math.sin(tick * 0.02 + 0.02*2),
-        d * Math.cos(tick * 0.02 + 0.02*2)
+        d * Math.sin(tick * 0.02 + 0.02 * 2),
+        d * Math.cos(tick * 0.02 + 0.02 * 2)
       );
 
       //blue
@@ -72,8 +72,8 @@ function animate(tick) {
         x,
         y,
         tick,
-        d * Math.sin(tick * 0.02 + 0.03*2),
-        d * Math.cos(tick * 0.02 + 0.03*2)
+        d * Math.sin(tick * 0.02 + 0.03 * 2),
+        d * Math.cos(tick * 0.02 + 0.03 * 2)
       );
       const gb = 0;
 
@@ -100,21 +100,20 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   return scaledValue;
 }
 
-function scale(number, inMin, inMax, outMin, outMax) {
-  return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-}
-
-function distanceToCenter(x, y, width, height) {
-  x = x + Math.cos(time * 0.01) * 528 - width / 2;
-  y = y + Math.sin(time * 0.01) * 528 - height / 2;
-  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) ^ Math.sin(time * 0.01)*10;
+function offset(x, y, width, height) {
+  x -= width / 2;
+  y -= height / 2;
+  x += Math.cos(time * 0.01) * 528;
+  y += Math.sin(time * 0.01) * 528;
+  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) ^ Math.sin(time * 0.01) * 10;
 }
 
 let time = 0;
 
 const loop = () => {
   time += 1;
-   const loopedTime = 1000 * (1 + Math.sin(time / 1000));
+  const loopedTime = 1000 * (1 + Math.sin(time / 1000));
+  console.log(loopedTime)
   animate(loopedTime);
   requestAnimationFrame(loop);
 };

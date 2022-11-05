@@ -15,7 +15,7 @@ function animate(tick) {
   draw.updateCanvas();
 }
 function fullForm(x, y, tick) {
-  const d = distanceToCenter(x, y, width, height) * 0.01;
+  const d = offset(x, y, width, height) * 0.01;
 
   // red
   const rOffsetX = Math.sin(4 * d + tick * 0.1 + x * 0.1);
@@ -73,11 +73,8 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   return scaledValue;
 }
 
-function scale(number, inMin, inMax, outMin, outMax) {
-  return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-}
 
-function distanceToCenter(x, y, width, height) {
+function offset(x, y, width, height) {
   return Math.sqrt(Math.pow(width / 2 - x, 2) + Math.pow(height / 2 - y, 2));
 }
 

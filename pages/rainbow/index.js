@@ -7,7 +7,7 @@ const height = draw.canvasHeight;
 function animate(tick) {
   for (let y = 0; y < draw.canvasHeight; y++) {
     for (let x = 0; x < draw.canvasWidth; x++) {
-      const d = distanceToCenter(x, y, width, height);
+      const d = offset(x, y, width, height);
 
       // red
       const rr = form(
@@ -103,11 +103,7 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   return scaledValue;
 }
 
-function scale(number, inMin, inMax, outMin, outMax) {
-  return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-}
-
-function distanceToCenter(x, y, width, height) {
+function offset(x, y, width, height) {
   x = x+128;
   y = y+128;
   return Math.sqrt(Math.pow(x, 2) ^ Math.pow(y, 2));
