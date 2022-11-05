@@ -7,7 +7,7 @@ const height = draw.canvasHeight;
 function animate(tick) {
   for (let y = 0; y < draw.canvasHeight; y++) {
     for (let x = 0; x < draw.canvasWidth; x++) {
-      const d = offset(x, y, width, height, tick);
+      const d = offset(x, y, width, height);
 
       // red
       const rr = form(
@@ -94,12 +94,12 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   x += xOffset;
   y += yOffset;
   const value = Math.cos(
-    0.1 * tick +
-    0.001 * (
+    (
+      tick +
       Math.sqrt(
         Math.pow(x, 2) * Math.pow(y, 2)
       )
-    ) * (2 + Math.cos(tick * 0.01))
+    ) * 0.0000001 * tick * (1 - 0.01 * Math.cos(tick / 20))
   );
 
   const scaledValue = scale(value, -1, 1, 0, 255);
@@ -107,19 +107,19 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   return scaledValue;
 }
 
-const R = 272
+const R = 528
 
-function offset(x, y, width, height, tick) {
+function offset(x, y, width, height) {
   x -= width / 2;
   y -= height / 2;
-  x += Math.cos(tick * 0.01) * R;
-  y += Math.sin(tick * 0.01) * R;
-  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) | 4;
+  x += Math.cos(time * 0.01) * R;
+  y += Math.sin(time * 0.01) * R;
+  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) | 10;
 }
 
 let videoLength = R * Math.pow(Math.PI, 2)
 let halfLenght = videoLength / 2
-let time = 0;
+let time = halfLenght;
 
 const loop = () => {
   const loopedTime = halfLenght * (Math.sin(time / halfLenght));
