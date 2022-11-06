@@ -95,7 +95,7 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   y += yOffset;
   const value = Math.cos(
     0.1 * tick +
-    0.001 * (
+    0.0005 * (
       Math.sqrt(
         Math.pow(x, 2) * Math.pow(y, 2)
       )
@@ -107,26 +107,47 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   return scaledValue;
 }
 
-const R = 272
 
 function offset(x, y, width, height, tick) {
+  const R = 362
   x -= width / 2;
   y -= height / 2;
-  x += Math.cos(tick * 0.01) * R;
-  y += Math.sin(tick * 0.01) * R;
-  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) | 4;
+  x += Math.cos(tick * 0.04) * R;
+  y += Math.sin(tick * 0.04) * R;
+  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) | 10;
 }
 
-let videoLength = R * Math.pow(Math.PI, 2)
-let halfLenght = videoLength / 2
-let time = 0;
+function video() {
 
-const loop = () => {
-  const loopedTime = halfLenght * (Math.sin(time / halfLenght));
-  console.log(loopedTime)
-  animate(loopedTime);
+  const videoLength = 30;
+  const timeSpeed = 0.5;
+
+  const fps = 60;
+  const lopedVideoLength = (fps * videoLength * timeSpeed) / Math.PI;
+  const halfLenght = lopedVideoLength / 2;
+
+  let time = 0;
+  let prevLoopedTime = 0;
+
+  // const capturer = new CCapture({ format: 'webm' });
+
+  const loop = () => {
+    const loopedTime = halfLenght * (Math.sin(time / halfLenght));
+    animate(loopedTime);
+
+    // capturer.capture(canvas);
+    if (prevLoopedTime < 0 && loopedTime > 0) {
+      // capturer.stop();
+      // capturer.save();
+    } else {
+      prevLoopedTime = loopedTime;
+      time += timeSpeed;
+      requestAnimationFrame(loop);
+    }
+  };
+
   requestAnimationFrame(loop);
-  time += 1;
-};
+  // capturer.start();
+}
 
-requestAnimationFrame(loop);
+video();

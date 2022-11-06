@@ -7,7 +7,7 @@ const height = draw.canvasHeight;
 function animate(tick) {
   for (let y = 0; y < draw.canvasHeight; y++) {
     for (let x = 0; x < draw.canvasWidth; x++) {
-      const d = offset(x, y, width, height);
+      const d = offset(x, y, width, height, tick);
 
       // red
       const rr = form(
@@ -91,12 +91,15 @@ function animate(tick) {
 function form(width, height, x, y, tick, xOffset, yOffset) {
   x = x - width / 2;
   y = y - height / 2;
-  tick += 2048
   const value = Math.cos(
     (
-      tick +
-      Math.sqrt(tick * Math.pow(x + xOffset, 2) * Math.pow(y + yOffset, 2))
-    ) * 0.00000001 * tick * (1 - 0.1 * Math.cos(tick / 20))
+      0.1 * tick +
+      0.00007 *
+      Math.sqrt(
+        (2 * 10 + 10 * Math.sin(tick * 0.1)) *
+        Math.pow(x + xOffset, 2) * Math.pow(y + yOffset, 2)
+      )
+    )
   );
 
   const scaledValue = scale(value, -1, 1, 0, 255);
@@ -104,26 +107,48 @@ function form(width, height, x, y, tick, xOffset, yOffset) {
   return scaledValue;
 }
 
-const R = 528
 
-function offset(x, y, width, height) {
+function offset(x, y, width, height, tick) {
+  const R = 800
   x -= width / 2;
   y -= height / 2;
-  x = x + Math.cos(time * 0.01) * R
-  y = y + Math.sin(time * 0.01) * R
-  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) + Math.sin(time * 0.1) * 100;
+  x = x + Math.cos(tick * 0.01) * R
+  y = y + Math.sin(tick * 0.01) * R
+  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) + Math.sin(tick * 0.1) * 64;
 }
 
-let videoLength = R * Math.pow(Math.PI, 2)
-let halfLenght = videoLength / 2
-let time = 0;
 
-const loop = () => {
-  const loopedTime = halfLenght * (Math.sin(time / halfLenght));
-  console.log(loopedTime)
-  animate(loopedTime);
+function video() {
+
+  const videoLength = 30;
+  const timeSpeed = 0.5;
+
+  const fps = 60;
+  const lopedVideoLength = (fps * videoLength * timeSpeed) / Math.PI;
+  const halfLenght = lopedVideoLength / 2;
+
+  let time = 0;
+  let prevLoopedTime = 0;
+
+  // const capturer = new CCapture({ format: 'webm' });
+
+  const loop = () => {
+    const loopedTime = halfLenght * (Math.sin(time / halfLenght));
+    animate(loopedTime);
+
+    // capturer.capture(canvas);
+    if (prevLoopedTime < 0 && loopedTime > 0) {
+      // capturer.stop();
+      // capturer.save();
+    } else {
+      prevLoopedTime = loopedTime;
+      time += timeSpeed;
+      requestAnimationFrame(loop);
+    }
+  };
+
   requestAnimationFrame(loop);
-  time += 1;
-};
+  // capturer.start();
+}
 
-requestAnimationFrame(loop);
+video();
